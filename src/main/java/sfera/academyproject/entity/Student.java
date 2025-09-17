@@ -25,8 +25,6 @@ public class Student extends BaseEntity {
     @ManyToOne
     private User parent;
 
-    @Enumerated(EnumType.STRING)
-    private Level level;
 
     @ManyToOne
     private Group group;

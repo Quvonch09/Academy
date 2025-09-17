@@ -4,17 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sfera.academyproject.dto.response.ResStudent;
 import sfera.academyproject.entity.Student;
+import sfera.academyproject.repository.MarkRepository;
+import sfera.academyproject.service.MarkService;
 
 @Component
 @RequiredArgsConstructor
 public class StudentMapper {
+    private final MarkService markService;
+    private final MarkRepository markRepository;
+
     public ResStudent toStudentDto(Student student) {
         return ResStudent.builder()
                 .id(student.getId())
                 .name(student.getFullName())
                 .phoneNumber(student.getPhoneNumber())
                 .parentName(student.getParent().getFullName())
-                .level(student.getLevel() != null ? student.getLevel().name() : null)
+                .level(markService.level(markRepository.scoreByUserId(student.getId())).toString())
+                .score(markRepository.scoreByUserId(student.getId()))
                 .build();
     }
 }
