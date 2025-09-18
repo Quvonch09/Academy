@@ -11,11 +11,13 @@ import sfera.academyproject.dto.response.ResPageable;
 import sfera.academyproject.entity.Group;
 import sfera.academyproject.entity.Room;
 import sfera.academyproject.entity.User;
+import sfera.academyproject.entity.enums.Role;
 import sfera.academyproject.exception.DataNotFoundException;
 import sfera.academyproject.mapper.GroupMapper;
 import sfera.academyproject.repository.GroupRepository;
 import sfera.academyproject.repository.RoomRepository;
 import sfera.academyproject.repository.UserRepository;
+import sfera.academyproject.security.CustomUserDetails;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -118,8 +120,15 @@ public class GroupService {
 
 
 
-    public ApiResponse<ResPageable> searchGroup(String name, String teacherName, String roomName, int page, int size){
-        Page<Group> groups = groupRepository.searchByGroup(name, teacherName, roomName, PageRequest.of(page, size));
+    public ApiResponse<ResPageable> searchGroup(CustomUserDetails userDetails, String name, String teacherName,
+                                                String roomName, int page, int size){
+        Page<Group> groups;
+
+        if (userDetails.getRole().equals(Role.TEACHER.name())){
+            groups = groupRepository.searchByGroup(name, userDetails.getFullName(), roomName, PageRequest.of(page, size));
+        } else {
+            groups = groupRepository.searchByGroup(name, teacherName, roomName, PageRequest.of(page, size));
+        }
 
         if(groups.getTotalElements() == 0){
            return ApiResponse.error("Group not found");

@@ -13,5 +13,5 @@ public class ResStudent {
     private String phoneNumber;
     private String parentName;
     private String level;
-    private int score;
+    private Integer score;
 }

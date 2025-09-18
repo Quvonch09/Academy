@@ -16,7 +16,7 @@ public interface MarkRepository extends JpaRepository<Mark, Long> {
     @Query(value = """
         select avg(total_score) from mark where student_id = ?1
     """, nativeQuery = true)
-    int scoreByUserId(Long userId);
+    Integer scoreByUserId(Long userId);
 
     List<Mark> findAllByTeacherId(Long teacherId);
     List<Mark> findAllByStudentId(Long studentId);

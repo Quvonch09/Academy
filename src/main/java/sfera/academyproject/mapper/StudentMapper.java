@@ -19,8 +19,8 @@ public class StudentMapper {
                 .name(student.getFullName())
                 .phoneNumber(student.getPhoneNumber())
                 .parentName(student.getParent().getFullName())
-                .level(markService.level(markRepository.scoreByUserId(student.getId())).toString())
-                .score(markRepository.scoreByUserId(student.getId()))
+                .level(markService.level(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0).toString())
+                .score(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0)
                 .build();
     }
 }

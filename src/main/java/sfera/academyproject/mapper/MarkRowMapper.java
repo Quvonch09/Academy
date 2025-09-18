@@ -21,7 +21,7 @@ public class MarkRowMapper {
                 .studentName(mark.getStudent().getFullName())
                 .teacherId(mark.getTeacher().getId())
                 .teacherName(mark.getTeacher().getFullName())
-                .score(markRepository.scoreByUserId(mark.getStudent().getId()))
+                .score(markRepository.scoreByUserId(mark.getId()) != null ? markRepository.scoreByUserId(mark.getId()) : null)
                 .date(mark.getDate())
                 .build();
     }
