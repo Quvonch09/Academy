@@ -22,6 +22,8 @@ public class Student extends BaseEntity {
 
     private String password;
 
+    private String imgUrl;
+
     @ManyToOne
     private User parent;
 

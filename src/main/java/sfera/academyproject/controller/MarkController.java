@@ -12,6 +12,7 @@ import sfera.academyproject.dto.request.ReqMark;
 import sfera.academyproject.dto.response.ResMark;
 import sfera.academyproject.dto.response.ResPageable;
 import sfera.academyproject.entity.User;
+import sfera.academyproject.security.CustomUserDetails;
 import sfera.academyproject.service.MarkService;
 
 import java.util.List;
@@ -25,33 +26,46 @@ public class MarkController {
     @PostMapping
     @PreAuthorize("hasRole('TEACHER')")
     @Operation(summary = "O'quvchilarni baholash")
-    public ResponseEntity<ApiResponse<String>> addMark(@AuthenticationPrincipal User user, @RequestBody ReqMark reqMark) {
-        return ResponseEntity.ok(markService.addMark(user, reqMark));
+    public ResponseEntity<ApiResponse<String>> addMark(
+            @AuthenticationPrincipal CustomUserDetails currentUser,
+            @RequestBody ReqMark reqMark
+    ) {
+        return ResponseEntity.ok(markService.addMark(currentUser, reqMark));
     }
-
 
     @PutMapping("/{id}")
-    @Operation(summary = "Markni update qilish")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<String>> updateMark(@PathVariable Long id,@AuthenticationPrincipal User teacher, @RequestBody ReqMark reqMark) {
-        return ResponseEntity.ok(markService.updateMark(id,teacher,reqMark));
+    @Operation(summary = "Markni update qilish")
+    public ResponseEntity<ApiResponse<String>> updateMark(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails currentUser,
+            @RequestBody ReqMark reqMark
+    ) {
+        return ResponseEntity.ok(markService.updateMark(id, currentUser, reqMark));
     }
-
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     @Operation(summary = "Markni o'chirish uchun")
-    public ResponseEntity<ApiResponse<String>> deleteMark(@AuthenticationPrincipal User user,@PathVariable Long id) {
-        return ResponseEntity.ok(markService.deleteMark(user,id));
+    public ResponseEntity<ApiResponse<String>> deleteMark(
+            @AuthenticationPrincipal CustomUserDetails currentUser,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(markService.deleteMark(currentUser, id));
     }
+
 
 
     @GetMapping("/myMarks")
-    @Operation(summary = "O'ziga quyilgan baholarni kuradi",
-            description = "Teacher bula o'zi quygan baholar, Student yoki parent bulsa o'ziga berilgan baholar")
-    @PreAuthorize("hasAnyRole('TEACHER','PARENT')")
-    public ResponseEntity<ApiResponse<List<ResMark>>> getMyMarks(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(markService.getMyMarks(user));
+    @Operation(summary = "O'ziga quyilgan baholarni ko‘rish",
+            description = "Teacher bo‘lsa o‘zi qo‘ygan baholar, Student yoki Parent bo‘lsa o‘ziga berilgan baholar")
+    @PreAuthorize("hasAnyRole('TEACHER','STUDENT','PARENT')")
+    public ResponseEntity<ApiResponse<List<ResMark>>> getMyMarks(
+            @AuthenticationPrincipal CustomUserDetails currentUser
+    ) {
+        return ResponseEntity.ok(markService.getMyMarks(currentUser));
     }
+
 
 
     @GetMapping("/search")
