@@ -4,12 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sfera.academyproject.dto.ApiResponse;
 import sfera.academyproject.dto.request.ReqGroup;
 import sfera.academyproject.dto.response.ResGroup;
 import sfera.academyproject.dto.response.ResPageable;
 import sfera.academyproject.entity.Group;
+import sfera.academyproject.security.CustomUserDetails;
 import sfera.academyproject.service.GroupService;
 
 import java.util.List;
@@ -44,7 +46,7 @@ public class GroupController {
 
 
     @GetMapping("/{groupId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT', 'PARENT')")
     @Operation(summary = "Guruhni bittasini kurish")
     public ResponseEntity<ApiResponse<ReqGroup>> getGroup(@PathVariable Long groupId){
         return ResponseEntity.ok(groupService.getGroupById(groupId));
@@ -52,13 +54,14 @@ public class GroupController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @Operation(summary = "Guruhni filter qilish")
-    public ResponseEntity<ApiResponse<ResPageable>> getAllGroup(@RequestParam(required = false) String name,
-                                                                      @RequestParam(required = false) String teacherName,
-                                                                      @RequestParam(required = false) String roomName,
-                                                                      @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "10") int size){
-        return ResponseEntity.ok(groupService.searchGroup(name, teacherName, roomName, page, size));
+    public ResponseEntity<ApiResponse<ResPageable>> getAllGroup(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                @RequestParam(required = false) String name,
+                                                                @RequestParam(required = false) String teacherName,
+                                                                @RequestParam(required = false) String roomName,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(groupService.searchGroup(userDetails,name, teacherName, roomName, page, size));
     }
 }

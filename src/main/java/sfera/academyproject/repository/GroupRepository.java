@@ -17,7 +17,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(value = """
     SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
     FROM groups g
-    JOIN groups_week_days_list w ON g.id = w.groups_id
+    JOIN groups_week_days w ON g.id = w.groups_id
     WHERE g.room_id = :roomId
       AND w.week_days IN (:weekdays)
       AND (:startTime < g.end_time AND :endTime > g.start_time)
@@ -31,7 +31,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(value = """
     SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
     FROM groups g
-    JOIN groups_week_days_list w ON g.id = w.groups_id
+    JOIN groups_week_days w ON g.id = w.groups_id
     WHERE g.room_id = :roomId
       AND w.week_days IN (:weekdays)
       AND (:startTime < g.end_time AND :endTime > g.start_time)
