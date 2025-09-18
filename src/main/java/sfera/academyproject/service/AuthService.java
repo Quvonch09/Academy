@@ -14,8 +14,11 @@ import sfera.academyproject.exception.DataNotFoundException;
 import sfera.academyproject.repository.GroupRepository;
 import sfera.academyproject.repository.StudentRepository;
 import sfera.academyproject.repository.UserRepository;
+import sfera.academyproject.security.CustomUserDetails;
 import sfera.academyproject.security.JwtService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -32,29 +35,41 @@ public class AuthService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if (user.getPassword() == null || !passwordEncoder.matches(password, user.getPassword())) {
+            if (!passwordEncoder.matches(password, user.getPassword())) {
                 return ApiResponse.error("Invalid credentials");
             }
 
-            String token = jwtService.generateToken(user.getUsername());
-            return ApiResponse.success(token, user.getRole().name());
+            CustomUserDetails userDetails = CustomUserDetails.fromUser(user);
+            String token = jwtService.generateToken(
+                    userDetails.getUsername(),
+                    userDetails.getRole()
+            );
+
+            return ApiResponse.success(token, userDetails.getRole());
         }
 
         Optional<Student> optionalStudent = studentRepository.findByPhoneNumber(phone);
 
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
-
-            if (student.getPassword() == null || !passwordEncoder.matches(password, student.getPassword())) {
+            if (!passwordEncoder.matches(password, student.getPassword())) {
                 return ApiResponse.error("Invalid credentials");
             }
 
-            String token = jwtService.generateToken(student.getPhoneNumber());
-            return ApiResponse.success(token, "STUDENT");
+            CustomUserDetails userDetails = CustomUserDetails.fromStudent(student);
+            String token = jwtService.generateToken(
+                    userDetails.getUsername(),
+                    userDetails.getRole()
+            );
+
+            return ApiResponse.success(token, userDetails.getRole());
         }
 
         return ApiResponse.error("User topilmadi");
     }
+
+
+
 
 
 
@@ -99,6 +114,7 @@ public class AuthService {
                 .phoneNumber(reqStudent.getPhone())
                 .password(passwordEncoder.encode(reqStudent.getPassword()))
                 .group(group)
+                .imgUrl(reqStudent.getImgUrl())
                 .build();
         studentRepository.save(student);
         return ApiResponse.success(null, "Successfully saved student");
