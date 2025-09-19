@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sfera.academyproject.dto.MarkDTO;
 import sfera.academyproject.dto.response.ResMark;
-import sfera.academyproject.dto.response.ResStudent;
 import sfera.academyproject.entity.Mark;
-import sfera.academyproject.entity.Student;
+import sfera.academyproject.entity.enums.Level;
 import sfera.academyproject.repository.MarkRepository;
+import sfera.academyproject.service.MarkService;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ public class MarkRowMapper {
                 .teacherId(mark.getTeacher().getId())
                 .teacherName(mark.getTeacher().getFullName())
                 .score(markRepository.scoreByUserId(mark.getId()) != null ? markRepository.scoreByUserId(mark.getId()) : null)
+                .level(level(markRepository.scoreByUserId(mark.getId()) != null ? markRepository.scoreByUserId(mark.getId()) : 0).toString())
                 .date(mark.getDate())
                 .build();
     }
@@ -40,6 +41,17 @@ public class MarkRowMapper {
                 .date(mark.getDate())
                 .level(mark.getLevel() != null ? mark.getLevel().name() : null)
                 .build();
+    }
+
+
+    public Level level(int totalScore){
+        if (totalScore >=8 && totalScore <=10){
+            return Level.YASHIL;
+        } else if (totalScore >=5 && totalScore <=7){
+            return Level.SARIQ;
+        } else {
+            return Level.QIZIL;
+        }
     }
 
 }

@@ -16,5 +16,6 @@ public class ResMark {
     private Long teacherId;
     private String teacherName;
     private Integer score;
+    private String level;
     private LocalDate date;
 }
