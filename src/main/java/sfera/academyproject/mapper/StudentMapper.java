@@ -10,7 +10,7 @@ import sfera.academyproject.service.MarkService;
 @Component
 @RequiredArgsConstructor
 public class StudentMapper {
-    private final MarkService markService;
+    private final MarkRowMapper markRowMapper;
     private final MarkRepository markRepository;
 
     public ResStudent toStudentDto(Student student) {
@@ -19,7 +19,7 @@ public class StudentMapper {
                 .name(student.getFullName())
                 .phoneNumber(student.getPhoneNumber())
                 .parentName(student.getParent().getFullName())
-                .level(markService.level(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0).toString())
+                .level(markRowMapper.level(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0).toString())
                 .score(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0)
                 .build();
     }

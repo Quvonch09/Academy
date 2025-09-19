@@ -13,7 +13,6 @@ import sfera.academyproject.entity.Mark;
 import sfera.academyproject.entity.Student;
 import sfera.academyproject.entity.User;
 import sfera.academyproject.entity.enums.Level;
-import sfera.academyproject.entity.enums.Role;
 import sfera.academyproject.exception.DataNotFoundException;
 import sfera.academyproject.mapper.MarkRowMapper;
 import sfera.academyproject.repository.MarkRepository;
@@ -59,7 +58,7 @@ public class MarkService {
                 .teacher(teacher)
                 .date(LocalDate.now())
                 .totalScore(totalScore)
-                .level(level(totalScore))
+                .level(markRowMapper.level(totalScore))
                 .build();
 
         markRepository.save(mark);
@@ -118,6 +117,16 @@ public class MarkService {
             User teacher = userRepository.findByPhone(currentUser.getUsername())
                     .orElseThrow(() -> new DataNotFoundException("Teacher not found"));
             marks = markRepository.findAllByTeacherId(teacher.getId());
+        } else if ("PARENT".equals(currentUser.getRole())) {
+            User parent = userRepository.findByPhone(currentUser.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Parent not found")
+            );
+
+            Student student = studentRepository.findByParent_Phone(parent.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Student not found")
+            );
+
+            marks = markRepository.findAllByStudentId(student.getId());
         } else {
             Student student = studentRepository.findByPhoneNumber(currentUser.getUsername())
                     .orElseThrow(() -> new DataNotFoundException("Student not found"));
@@ -159,17 +168,5 @@ public class MarkService {
         );
 
         return ApiResponse.success(markRowMapper.toDto(mark), "Success");
-    }
-
-
-
-    public Level level(int totalScore){
-        if (totalScore >=8 && totalScore <=10){
-            return Level.YASHIL;
-        } else if (totalScore >=5 && totalScore <=7){
-            return Level.SARIQ;
-        } else {
-            return Level.QIZIL;
-        }
     }
 }

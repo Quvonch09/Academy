@@ -36,7 +36,7 @@ public class AuthService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (!passwordEncoder.matches(password, user.getPassword())) {
-                return ApiResponse.error("Invalid credentials");
+                return ApiResponse.error("Invalid password");
             }
 
             CustomUserDetails userDetails = CustomUserDetails.fromUser(user);
@@ -53,7 +53,7 @@ public class AuthService {
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
             if (!passwordEncoder.matches(password, student.getPassword())) {
-                return ApiResponse.error("Invalid credentials");
+                return ApiResponse.error("Invalid password");
             }
 
             CustomUserDetails userDetails = CustomUserDetails.fromStudent(student);

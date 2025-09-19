@@ -30,5 +30,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
                           @Param("phone") String phone,
                           @Param("role") String role, Pageable pageable);
 
+    long countByRole(Role role);
+
 
 }
