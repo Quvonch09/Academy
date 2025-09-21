@@ -81,9 +81,15 @@ public class MarkService {
             return ApiResponse.error("This mark does not belong to you.");
         }
 
+        int totalScore = (reqMark.getActivityScore() +
+                reqMark.getAttendanceScore() +
+                reqMark.getHomeworkScore()) / 3;
+
+
         mark.setAttendanceScore(reqMark.getAttendanceScore());
         mark.setActivityScore(reqMark.getActivityScore());
         mark.setHomeworkScore(reqMark.getHomeworkScore());
+        mark.setTotalScore(totalScore);
         mark.setTeacher(teacher);
 
         markRepository.save(mark);

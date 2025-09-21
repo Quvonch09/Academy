@@ -20,6 +20,7 @@ import sfera.academyproject.repository.*;
 import sfera.academyproject.security.CustomUserDetails;
 import sfera.academyproject.security.JwtService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -169,12 +170,24 @@ public class UserService {
 
 
     public ApiResponse<List<ResLeaderboard>> getGroupLeaderboard(CustomUserDetails currentUser) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        if (currentUser.getRole().equals(Role.STUDENT.name())){
+            Student student = studentRepository.findByPhoneNumber(currentUser.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Student topilmadi")
+            );
 
-        Student student = studentRepository.findByPhoneNumber(currentUser.getPhone()).orElseThrow(
-                () -> new DataNotFoundException("Student topilmadi")
-        );
+            rows = studentRepository.getGroupLeaderboard(student.getGroup().getId());
+        } else if (currentUser.getRole().equals(Role.PARENT.name())) {
+            User parent = userRepository.findByPhone(currentUser.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Parent not found")
+            );
 
-        List<Map<String, Object>> rows = studentRepository.getGroupLeaderboard(student.getGroup().getId());
+            Student student = studentRepository.findByParent_Phone(parent.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Student not found")
+            );
+            rows = studentRepository.getGroupLeaderboard(student.getGroup().getId());
+        }
+
 
         List<ResLeaderboard> result = rows.stream()
                 .map(r -> {
