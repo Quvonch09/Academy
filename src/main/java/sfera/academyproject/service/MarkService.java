@@ -90,6 +90,7 @@ public class MarkService {
         mark.setActivityScore(reqMark.getActivityScore());
         mark.setHomeworkScore(reqMark.getHomeworkScore());
         mark.setTotalScore(totalScore);
+        mark.setLevel(markRowMapper.level(totalScore));
         mark.setTeacher(teacher);
 
         markRepository.save(mark);
