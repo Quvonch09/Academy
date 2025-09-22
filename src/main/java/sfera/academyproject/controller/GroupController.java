@@ -64,4 +64,12 @@ public class GroupController {
                                                                 @RequestParam(defaultValue = "10") int size){
         return ResponseEntity.ok(groupService.searchGroup(userDetails,name, teacherName, roomName, page, size));
     }
+
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
+    @Operation(summary = "Guruhni hammasini kurish")
+    public ResponseEntity<ApiResponse<List<ResGroup>>> getAllGroup(){
+        return ResponseEntity.ok(groupService.getAllGroup());
+    }
 }

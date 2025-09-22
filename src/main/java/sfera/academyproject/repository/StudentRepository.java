@@ -66,4 +66,17 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Map<String, Object>> getGroupLeaderboard(@Param("groupId") Long groupId);
 
 
+    @Query(value = """
+        SELECT s.*
+        FROM student s
+        JOIN (
+            SELECT m.student_id, SUM(m.total_score) AS total_score
+            FROM mark m WHERE m.teacher_id = ?1
+            GROUP BY m.student_id
+            ORDER BY total_score DESC
+            LIMIT 5
+        ) top_students ON s.id = top_students.student_id
+        """, nativeQuery = true)
+    List<Student> findTop5StudentsByTotalScoreByTeacher(Long teacherId);
+
 }

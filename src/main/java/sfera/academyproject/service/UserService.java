@@ -229,6 +229,18 @@ public class UserService {
     }
 
 
+    public ApiResponse<List<ResStudent>> getTop5StudentsForTeacher(CustomUserDetails currentUser){
+        if (currentUser.getRole().equals(Role.TEACHER.name())){
+            List<ResStudent> students = studentRepository.findTop5StudentsByTotalScore()
+                    .stream().map(studentMapper::toStudentDto).toList();
+
+            return ApiResponse.success(students, "Top 5 students");
+        } else {
+            return ApiResponse.error("Kirishga ruhsat yuq");
+        }
+    }
+
+
 
     private UserDashboardDto dashboardDto(Student student){
         return UserDashboardDto.builder()

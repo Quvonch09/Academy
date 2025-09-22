@@ -92,5 +92,13 @@ public class UserController {
     }
 
 
+    @GetMapping("/topStudentsForTeacher")
+    @Operation(summary = "teacher top 5 ta studentni kurish dashboard uchun")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<ApiResponse<List<ResStudent>>> topStudentsForTeacher(
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        return ResponseEntity.ok(userService.getTop5StudentsForTeacher(currentUser));
+    }
+
 
 }
