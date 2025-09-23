@@ -241,6 +241,30 @@ public class UserService {
     }
 
 
+    public ApiResponse<UserResponse> getOneUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User topilmadi"));
+        return ApiResponse.success(mapper.toResponse(user), "Success");
+    }
+
+
+    public ApiResponse<String> updateUser(Long userId,UserDTO userDTO){
+        User user1 = userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException("User topilmadi"));
+        user1.setPhone(userDTO.getPhone());
+        user1.setFullName(userDTO.getFullName());
+        user1.setImageUrl(userDTO.getImageUrl());
+        User save = userRepository.save(user1);
+        if (userDTO.getPhone().equals(user1.getPhone())) {
+            String token = jwtService.generateToken(save.getPhone(), save.getRole().name());
+            return ApiResponse.success(token, save.getRole().name());
+        } else {
+            return ApiResponse.success(null, "Success");
+        }
+
+    }
+
+
+
+
 
     private UserDashboardDto dashboardDto(Student student){
         return UserDashboardDto.builder()
