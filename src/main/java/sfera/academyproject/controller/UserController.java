@@ -39,6 +39,14 @@ public class UserController {
     }
 
 
+    @PutMapping("/{userId}")
+    @Operation(summary = "O'zini o'zi tahrilash uchun")
+    public ResponseEntity<ApiResponse<String>> updateUser(@PathVariable Long userId,
+                                                      @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(userId, userDTO));
+    }
+
+
     @GetMapping("/search")
     @Operation(summary = "admin userlarni barchasini kurish")
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
@@ -98,6 +106,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<List<ResStudent>>> topStudentsForTeacher(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         return ResponseEntity.ok(userService.getTop5StudentsForTeacher(currentUser));
+    }
+
+    @GetMapping("/get-one/{id}")
+    @Operation(summary = "bitta user id buyicha olish")
+    public ResponseEntity<ApiResponse<UserResponse>> getOneUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getOneUser(id));
     }
 
 
