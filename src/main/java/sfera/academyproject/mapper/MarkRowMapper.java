@@ -6,6 +6,7 @@ import sfera.academyproject.dto.MarkDTO;
 import sfera.academyproject.dto.response.ResMark;
 import sfera.academyproject.entity.Mark;
 import sfera.academyproject.entity.enums.Level;
+import sfera.academyproject.exception.BadRequestException;
 import sfera.academyproject.repository.MarkRepository;
 import sfera.academyproject.service.MarkService;
 
@@ -48,14 +49,28 @@ public class MarkRowMapper {
     }
 
 
-    public Level level(int totalScore){
-        if (totalScore >=8 && totalScore <=10){
-            return Level.YASHIL;
-        } else if (totalScore >=5 && totalScore <=7){
-            return Level.SARIQ;
+    public Level level(int totalScore) {
+        if (totalScore <= 10) { // 10 ballik tizim
+            if (totalScore >= 8) {
+                return Level.YASHIL;
+            } else if (totalScore >= 5) {
+                return Level.SARIQ;
+            } else {
+                return Level.QIZIL;
+            }
+        } else if (totalScore <= 100) { // 100 ballik tizim
+            if (totalScore >= 80) {
+                return Level.YASHIL;
+            } else if (totalScore >= 50) {
+                return Level.SARIQ;
+            } else {
+                return Level.QIZIL;
+            }
         } else {
-            return Level.QIZIL;
+            // noto‘g‘ri qiymat kiritilgan (10 dan katta yoki 100 dan katta)
+            throw new BadRequestException("Noto‘g‘ri ball kiritildi: " + totalScore);
         }
     }
+
 
 }
