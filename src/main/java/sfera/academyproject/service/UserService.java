@@ -231,7 +231,11 @@ public class UserService {
 
     public ApiResponse<List<ResStudent>> getTop5StudentsForTeacher(CustomUserDetails currentUser){
         if (currentUser.getRole().equals(Role.TEACHER.name())){
-            List<ResStudent> students = studentRepository.findTop5StudentsByTotalScore()
+            User user = userRepository.findByPhone(currentUser.getPhone()).orElseThrow(
+                    () -> new DataNotFoundException("Teacher topilmadi")
+            );
+
+            List<ResStudent> students = studentRepository.findTop5StudentsByTotalScoreByTeacher(user.getId())
                     .stream().map(studentMapper::toStudentDto).toList();
 
             return ApiResponse.success(students, "Top 5 students");

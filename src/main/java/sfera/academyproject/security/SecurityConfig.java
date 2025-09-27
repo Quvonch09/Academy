@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll() // agar ochiq API’lar bo‘lsa
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -105,7 +106,7 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://127.0.0.1:5500",
                 "http://167.86.121.42/",
-                "https://adminmanagelc.netlify.app/"
+                "https://nazorat.sferaacademy.uz/"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
