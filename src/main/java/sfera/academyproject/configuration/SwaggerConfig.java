@@ -32,7 +32,7 @@ public class SwaggerConfig {
                                 .name("Apache 2.0")
                                 .url("https://springdoc.org")))
                 .servers(Arrays.asList(
-                        new Server().url("https://nazorat.sferaacademy.uz/api").description("Production server"),
+                        new Server().url("http://167.86.121.42:8080").description("Production server"),
                         new Server().url("http://localhost:8080").description("Local server")
                 ))
                 .externalDocs(new ExternalDocumentation()

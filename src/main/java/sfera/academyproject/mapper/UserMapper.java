@@ -31,6 +31,7 @@ public class UserMapper {
                 user.getPhoneNumber(),
                 user.getGroup().getName(),
                 user.getParent().getFullName(),
+                user.getParent().getPhone(),
                 markRowMapper.level(markRepository.scoreByUserId(user.getId()) != null ?
                         markRepository.scoreByUserId(user.getId()) : 0).toString(),
                 user.getGroup().getId(),

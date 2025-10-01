@@ -56,7 +56,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
 
 
-    long countByTeacher_FullName(String name);
+    long countByTeacher_Id(Long id);
 
 
 

@@ -19,6 +19,8 @@ public class StudentMapper {
                 .name(student.getFullName())
                 .phoneNumber(student.getPhoneNumber())
                 .parentName(student.getParent().getFullName())
+                .groupName(student.getGroup().getName())
+                .teacherName(student.getGroup().getTeacher().getFullName())
                 .level(markRowMapper.level(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0).toString())
                 .score(markRepository.scoreByUserId(student.getId()) != null ? markRepository.scoreByUserId(student.getId()) : 0)
                 .build();

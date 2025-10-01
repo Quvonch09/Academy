@@ -159,8 +159,13 @@ public class UserService {
 
 
     public ApiResponse<TeacherDTO> teacherDashboard(CustomUserDetails currentUser){
-        long l = groupRepository.countByTeacher_FullName(currentUser.getFullName());
-        long l1 = studentRepository.countByTeacher(currentUser.getFullName());
+
+        User teacher = userRepository.findByPhone(currentUser.getPhone()).orElseThrow(
+                () -> new DataNotFoundException("Teacher topilmadi")
+        );
+
+        long l = groupRepository.countByTeacher_Id(teacher.getId());
+        long l1 = studentRepository.countByGroup_Teacher_Id(teacher.getId());
         TeacherDTO teacherDTO = TeacherDTO.builder()
                 .groupCount(l)
                 .studentCount(l1)

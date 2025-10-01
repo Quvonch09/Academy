@@ -12,7 +12,6 @@ import sfera.academyproject.dto.response.ResPageable;
 import sfera.academyproject.entity.Mark;
 import sfera.academyproject.entity.Student;
 import sfera.academyproject.entity.User;
-import sfera.academyproject.entity.enums.Level;
 import sfera.academyproject.exception.DataNotFoundException;
 import sfera.academyproject.mapper.MarkRowMapper;
 import sfera.academyproject.repository.MarkRepository;
@@ -123,7 +122,7 @@ public class MarkService {
         if ("TEACHER".equals(currentUser.getRole())) {
             User teacher = userRepository.findByPhone(currentUser.getUsername())
                     .orElseThrow(() -> new DataNotFoundException("Teacher not found"));
-            marks = markRepository.findAllByTeacherId(teacher.getId());
+            marks = markRepository.findAllByTeacherIdOrderByCreatedAtDesc(teacher.getId());
         } else if ("PARENT".equals(currentUser.getRole())) {
             User parent = userRepository.findByPhone(currentUser.getPhone()).orElseThrow(
                     () -> new DataNotFoundException("Parent not found")
@@ -133,11 +132,11 @@ public class MarkService {
                     () -> new DataNotFoundException("Student not found")
             );
 
-            marks = markRepository.findAllByStudentId(student.getId());
+            marks = markRepository.findAllByStudentIdOrderByCreatedAtDesc(student.getId());
         } else {
             Student student = studentRepository.findByPhoneNumber(currentUser.getUsername())
                     .orElseThrow(() -> new DataNotFoundException("Student not found"));
-            marks = markRepository.findAllByStudentId(student.getId());
+            marks = markRepository.findAllByStudentIdOrderByCreatedAtDesc(student.getId());
         }
 
         List<ResMark> list = marks.stream()

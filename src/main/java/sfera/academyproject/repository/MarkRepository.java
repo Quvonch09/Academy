@@ -18,8 +18,8 @@ public interface MarkRepository extends JpaRepository<Mark, Long> {
     """, nativeQuery = true)
     Integer scoreByUserId(Long userId);
 
-    List<Mark> findAllByTeacherId(Long teacherId);
-    List<Mark> findAllByStudentId(Long studentId);
+    List<Mark> findAllByTeacherIdOrderByCreatedAtDesc(Long teacherId);
+    List<Mark> findAllByStudentIdOrderByCreatedAtDesc(Long studentId);
 
     @Query(value = """
     select m.* from mark m  join users u on u.id = m.teacher_id join student s on s.id = m.student_id where
