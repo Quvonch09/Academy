@@ -12,6 +12,8 @@ public class ResStudent {
     private String name;
     private String phoneNumber;
     private String parentName;
+    private String groupName;
+    private String teacherName;
     private String level;
     private Integer score;
 }

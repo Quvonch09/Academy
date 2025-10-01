@@ -34,16 +34,16 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                                 @Param("teacherName") String teacherName, Pageable pageable);
 
     @Query(value = """
-        SELECT s.*
-        FROM student s
-        JOIN (
-            SELECT m.student_id, SUM(m.total_score) AS total_score
-            FROM mark m
-            GROUP BY m.student_id
-            ORDER BY total_score DESC
-            LIMIT 5
-        ) top_students ON s.id = top_students.student_id
-        """, nativeQuery = true)
+    SELECT s.*, top_students.total_score
+    FROM student s
+    JOIN (
+        SELECT m.student_id, SUM(m.total_score) AS total_score
+        FROM mark m
+        GROUP BY m.student_id
+    ) top_students ON s.id = top_students.student_id
+    ORDER BY top_students.total_score DESC
+    LIMIT 5
+    """, nativeQuery = true)
     List<Student> findTop5StudentsByTotalScore();
 
     @Query(value = """
@@ -51,6 +51,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     """, nativeQuery = true)
     long countByTeacher(String name);
 
+
+    long countByGroup_Teacher_Id(Long teacherId);
     @Query(value = """
     SELECT 
         s.id as student_id,
@@ -73,9 +75,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             SELECT m.student_id, SUM(m.total_score) AS total_score
             FROM mark m WHERE m.teacher_id = ?1
             GROUP BY m.student_id
-            ORDER BY total_score DESC
-            LIMIT 5
         ) top_students ON s.id = top_students.student_id
+        ORDER BY top_students.total_score DESC
+        LIMIT 5
         """, nativeQuery = true)
     List<Student> findTop5StudentsByTotalScoreByTeacher(Long teacherId);
 

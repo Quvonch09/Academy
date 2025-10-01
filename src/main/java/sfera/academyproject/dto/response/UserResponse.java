@@ -17,6 +17,7 @@ public class UserResponse {
     private String phone;
     private String groupName;
     private String parentName;
+    private String parentPhone;
     private String level;
     private Long groupId;
     private String imageUrl;
