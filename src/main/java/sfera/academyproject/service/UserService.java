@@ -272,6 +272,11 @@ public class UserService {
     }
 
 
+    public ApiResponse<List<DashboardDTO>> userStatistic(){
+        List<DashboardDTO> dashboard = studentRepository.getDashboard();
+        return ApiResponse.success(dashboard, "Dashboard");
+    }
+
 
 
 

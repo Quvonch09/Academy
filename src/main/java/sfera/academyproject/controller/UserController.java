@@ -115,4 +115,10 @@ public class UserController {
     }
 
 
+    @GetMapping("/statistic")
+    public ResponseEntity<ApiResponse<List<DashboardDTO>>> getStatistic(){
+        return ResponseEntity.ok(userService.userStatistic());
+    }
+
+
 }
