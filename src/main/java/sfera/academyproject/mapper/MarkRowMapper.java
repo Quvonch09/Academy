@@ -22,13 +22,12 @@ public class MarkRowMapper {
                 .studentName(mark.getStudent().getFullName())
                 .teacherId(mark.getTeacher().getId())
                 .teacherName(mark.getTeacher().getFullName())
-//                .score(markRepository.scoreByUserId(mark.getStudent().getId()) != null ?
-//                        markRepository.scoreByUserId(mark.getStudent().getId()) : null)
-//                .level(level(markRepository.scoreByUserId(mark.getStudent().getId()) != null ?
-//                        markRepository.scoreByUserId(mark.getStudent().getId()) : 0).toString())
                 .score(mark.getTotalScore())
                 .level(mark.getLevel().name())
                 .date(mark.getDate())
+                .activityScore(mark.getActivityScore())
+                .attendanceScore(mark.getAttendanceScore())
+                .homeworkScore(mark.getHomeworkScore())
                 .build();
     }
 
